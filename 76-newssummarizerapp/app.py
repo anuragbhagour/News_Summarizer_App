@@ -27,21 +27,21 @@ default_models = {
 }
 
 # Streamlit UI
-st.set_page_config(page_title="Smart News Summarizer", page_icon="📰")
-st.title("📰 Smart News Summarizer")
+st.set_page_config(page_title="Smart News Summarizer", page_icon=" ")
+st.title("Smart News Summarizer")
 st.markdown("---")
-st.markdown(f"📅 **Date:** {datetime.now().strftime('%B %d, %Y')}")
-st.markdown("🔍 Enter any topic to get a 5-bullet point summary!")
+st.markdown(f" **Date:** {datetime.now().strftime('%B %d, %Y')}")
+st.markdown(" Enter any topic to get a 5-bullet point summary!")
 
 # Sidebar: Select provider
-provider_label = st.sidebar.selectbox("🤖 Choose Model Provider", list(provider_map.keys()))
+provider_label = st.sidebar.selectbox(" Choose Model Provider", list(provider_map.keys()))
 provider = provider_map[provider_label]
 
 # API Key input
-api_key = st.sidebar.text_input(f"🔑 Enter your {provider_label} API Key", type="password")
+api_key = st.sidebar.text_input(f" Enter your {provider_label} API Key", type="password")
 
 # Model name input
-model_name = st.sidebar.text_input("🧠 Model Name", value=default_models[provider_label])
+model_name = st.sidebar.text_input(" Model Name", value=default_models[provider_label])
 
 # Prompt template
 system_template = """
@@ -70,7 +70,7 @@ def generate_digest(user_topic, model):
     results = search_tool.invoke(user_topic)
 
     if not results:
-        return "❌ Sorry, no relevant information found for this topic."
+        return "Sorry, no relevant information found for this topic."
 
     contents = "\n\n".join([item["content"] for item in results])
     prompt = prompt_template.invoke({"search_results": contents})
@@ -79,9 +79,9 @@ def generate_digest(user_topic, model):
 # Main input
 user_input = st.text_input("Enter a topic (e.g., AI News, Cricket World Cup, Tesla Stock, etc.):")
 # Button to trigger summary
-if st.button("Fetch & Summarize 🚀"):
+if st.button("Summarize"):
     if not api_key or not user_input.strip():
-        st.warning("⚠️ Please enter both API key and a topic.")
+        st.warning("Please enter both API key and a topic.")
     else:
         # Set environment variable based on provider
         key_env_map = {
@@ -93,14 +93,14 @@ if st.button("Fetch & Summarize 🚀"):
         os.environ[key_env_map[provider]] = api_key
 
         # Init model
-        with st.spinner("🧠 Initializing model..."):
+        with st.spinner("Initializing model..."):
             model = init_chat_model(model_name, model_provider=provider)
 
         # Generate summary
-        with st.spinner(f"🔍 Summarizing news about **{user_input}**..."):
+        with st.spinner(f"Summarizing news about **{user_input}**..."):
             summary = generate_digest(user_input, model)
-            st.success(f"✅ Summary for **{user_input}**:")
-            st.markdown("### 🧠 Top 5 Bullet Points:")
+            st.success(f"Summary for **{user_input}**:")
+            st.markdown("### Top 5 Bullet Points:")
             st.markdown(summary)
 
 else:
